@@ -1,0 +1,22 @@
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: docqa-api:latest
+    container_name: docqa-api
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: ./my-frontend
+      dockerfile: Dockerfile
+    image: docqa-web:latest
+    container_name: docqa-web
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://docqa-api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api

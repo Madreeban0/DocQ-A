@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docqa-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: docqa-web }
+  template:
+    metadata:
+      labels: { app: docqa-web }
+    spec:
+      containers:
+        - name: web
+          image: docqa-web:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NEXT_PUBLIC_API_BASE
+              value: "http://docqa-api:8000"
+          ports: [{ containerPort: 3000 }]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docqa-web
+spec:
+  selector: { app: docqa-web }
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: NodePort
